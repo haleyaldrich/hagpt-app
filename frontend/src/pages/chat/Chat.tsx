@@ -11,6 +11,7 @@ import DOMPurify from 'dompurify';
 
 import styles from "./Chat.module.css";
 import Contoso from "../../assets/Contoso.svg";
+import HAlogo from "../../assets/ha_logo.svg";
 import { XSSAllowTags } from "../../constants/xssAllowTags";
 
 import {
@@ -641,12 +642,24 @@ const Chat = () => {
                         {!messages || messages.length < 1 ? (
                             <Stack className={styles.chatEmptyState}>
                                 <img
-                                    src={ui?.chat_logo ? ui.chat_logo : Contoso}
+                                    src={ui?.chat_logo ? ui.chat_logo : HAlogo}
                                     className={styles.chatIcon}
                                     aria-hidden="true"
                                 />
                                 <h1 className={styles.chatEmptyStateTitle}>{ui?.chat_title}</h1>
-                                <h2 className={styles.chatEmptyStateSubtitle}>{ui?.chat_description}</h2>
+                                <h2 className={styles.chatEmptyStateSubtitle}>
+                                    {ui?.chat_description}
+                                    <br/>This page may stop working without warning. Please report issues and feedback to [Nick Machairas].
+                                    <br/>
+                                    <br/>The chatbot generates answers based on information in <strong>Human Potential</strong> and <strong>Health & Safety</strong> documents,
+                                    <br/>and its knowledgebase will keep expanding. Be specific and provide context. Example questions:
+                                    <br/>
+                                    <br/><em>How many vacation days do I get each year as a level E staff member?</em>
+                                    <br/><em>How can I safely operate a PID?</em>
+                                    <br/><em>I have field work coming up this June in Phoenix AZ. What should I be aware of?</em>
+                                    <br/><em>Does H&A provide a benefit that may cover my child's braces?</em>
+                                    <br/><em>Can I use my floating holiday time any day of the year?</em>
+                                </h2>
                             </Stack>
                         ) : (
                             <div className={styles.chatMessageStream} style={{ marginBottom: isLoading ? "40px" : "0px" }} role="log">
@@ -782,7 +795,9 @@ const Chat = () => {
                                 <span aria-label="Citations" className={styles.citationPanelHeader}>Citations</span>
                                 <IconButton iconProps={{ iconName: 'Cancel' }} aria-label="Close citations panel" onClick={() => setIsCitationPanelOpen(false)} />
                             </Stack>
-                            <h5 className={styles.citationPanelTitle} tabIndex={0} title={activeCitation.url && !activeCitation.url.includes("blob.core") ? activeCitation.url : activeCitation.title ?? ""} onClick={() => onViewSource(activeCitation)}>{activeCitation.title}</h5>
+                            <h5 className={styles.citationPanelTitle} tabIndex={0} title={activeCitation.url && !activeCitation.url.includes("blob.core") ? activeCitation.url : activeCitation.title ?? ""} onClick={() => onViewSource(activeCitation)}>{activeCitation.filepath}</h5>
+                            <code tabIndex={0}>{activeCitation.url && activeCitation.filepath ? decodeURI(activeCitation.url).replace('https://stghaenterprisedata01.blob.core.windows.net/gpt-test-corporate-data', '').replace(activeCitation.filepath, '') : ''}</code>
+                            
                             <div tabIndex={0}>
                                 <ReactMarkdown
                                     linkTarget="_blank"
